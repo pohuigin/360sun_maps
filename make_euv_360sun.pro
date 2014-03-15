@@ -38,7 +38,7 @@ if n_elements(inaiamap) eq 1 then aiamap=inaiamap else begin
 
 	if keyword_set(synoptic) then begin
 
-stop
+;stop
 
 		aiafiles=getjsoc_synoptic_read(date, dateendaia, wavelength=wavelengthaia, outpath=outpath, info_struct=info_struct, skipqualcheck=skipqualcheck, /nodata)
 		aiaabst=abs(anytim(file2time(aiafiles))-tim)
@@ -67,7 +67,7 @@ endif else print,'GOT AIA MAP'
 if n_elements(instamap) eq 1 then stamap=instamap else begin
 	if n_elements(fsta) ne 1 then begin
 ;		stafiles=get_euvi_read(date, /a_sc, wavelength=wavelengthsta,/nodata, rangesec=rangesecstab, index=staindex)
-		stafiles=get_euvi_read(date, /a_sc, wavelength=wavelengthsta, rangesec=rangesecstab, /noindex)
+		stafiles=get_euvi_read(date, /a_sc, wavelength=wavelengthsta, rangesec=rangesecstab, /nodata) ;/noindex
         statims=anytim(file2time(stafiles))        
         
 ;        if data_type(staindex) ne 8 or stafiles[0] eq '' then goto,no_sta_data
@@ -78,7 +78,8 @@ if n_elements(instamap) eq 1 then stamap=instamap else begin
 		stafile=stafiles[wstamin]
 		fsta=stafile
 	endif	
-	stamap=get_euvi_read(date, /a_sc, wavelength=wavelengthsta, outsize=rebin, filelist=fsta, /calibrate)
+	
+	stamap=get_euvi_read(date, /a_sc, wavelength=wavelengthsta, outsize=rebin, filelist=fsta) ;, /calibrate)
 endelse
 
 no_sta_data:
@@ -95,7 +96,7 @@ endif else print,'GOT STA MAP'
 if n_elements(instbmap) eq 1 then stbmap=instbmap else begin
 	if n_elements(fstb) ne 1 then begin
 ;		stbfiles=get_euvi_read(date, /b_sc, wavelength=wavelengthstb,/nodata, rangesec=rangesecstab, index=stbindex)
-		stbfiles=get_euvi_read(date, /b_sc, wavelength=wavelengthstb, rangesec=rangesecstab, /noindex)
+		stbfiles=get_euvi_read(date, /b_sc, wavelength=wavelengthstb, rangesec=rangesecstab, /nodata) ;/noindex
         stbtims=anytim(file2time(stbfiles)) 
         
 ;        if data_type(stbindex) ne 8 or stbfiles[0] eq '' then goto,no_stb_data
@@ -106,7 +107,8 @@ if n_elements(instbmap) eq 1 then stbmap=instbmap else begin
 		stbfile=stbfiles[wstbmin]
 		fstb=stbfile
 	endif	
-	stbmap=get_euvi_read(date, /b_sc, wavelength=wavelengthstb, outsize=rebin, filelist=fstb, /calibrate)
+	
+	stbmap=get_euvi_read(date, /b_sc, wavelength=wavelengthstb, outsize=rebin, filelist=fstb) ;, /calibrate)
 endelse
 
 no_stb_data:
@@ -118,6 +120,9 @@ if data_type(stbmap) ne 8 then begin
 	
 	return, -1
 endif else print,'GOT STB MAP'
+
+
+stop
 
 ;HACK change radius of Solar limb
 ;Check WCS_RSUN to make sure it matches
